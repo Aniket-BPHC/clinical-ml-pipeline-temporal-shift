@@ -1,76 +1,87 @@
 # Clinical ML Pipeline Under Temporal Shift
 
-An end-to-end machine learning system for clinical prediction using electronic health record (EHR) data. The project focuses on building interpretable predictive models, evaluating their robustness under temporal distribution shift, and studying the effectiveness of continual learning on newer patient populations through an interactive Streamlit dashboard.
+An end-to-end machine learning pipeline for clinical prediction using Electronic Health Record (EHR) data. The project focuses on feature engineering, predictive modeling, temporal distribution shift analysis, continual learning, and model interpretability through an interactive Streamlit dashboard.
 
 ---
 
 ## Overview
 
-Machine learning models in healthcare often experience performance degradation when deployed on patient populations that differ from the data they were originally trained on. This project investigates that challenge by constructing a complete clinical ML pipeline and evaluating model behavior across historical and current cohorts.
+Machine learning models deployed in healthcare often experience performance degradation when the underlying patient population changes over time. This project investigates that challenge by building a complete clinical prediction pipeline and evaluating model performance across historical and current patient cohorts.
 
-The project includes:
+The system includes:
 
-* EHR data integration from multiple clinical tables
-* Feature engineering and patient-level aggregation
-* Exploratory Data Analysis (EDA)
-* Temporal dataset splitting
-* Supervised learning for disease prediction
-* Feature importance analysis
-* Bias-variance analysis
+* EHR data integration and preprocessing
+* Patient-level feature engineering
+* Temporal train-test splitting
+* Clinical condition prediction
+* Model comparison and evaluation
+* Temporal shift analysis
 * Continual learning experiments
-* Interactive dashboard for model exploration
-
----
-
-## Problem Statement
-
-Given patient demographics, observations, and diagnosed conditions, build predictive models that can identify clinically relevant conditions while analyzing how model performance changes over time.
-
-The project specifically investigates:
-
-* How well models generalize across temporal shifts
-* Which features drive predictions
-* Whether retraining on newer data improves performance
-* Trade-offs between model complexity and generalization
+* Interactive Streamlit dashboard
 
 ---
 
 ## Dataset
 
-The project uses a synthetic Electronic Health Record (EHR) dataset derived from Synthea.
+This project uses a synthetic Electronic Health Record (EHR) dataset generated using Synthea.
 
-Data sources include:
+Dataset download:
 
-* Patient demographics
-* Clinical observations
-* Medical conditions
+https://drive.google.com/drive/u/2/folders/1d7QielEDfhua8YfU77U0EmPF048LEcLv
 
-These tables are merged and transformed into patient-level feature vectors suitable for machine learning.
-
-Expected directory structure:
+After downloading, place the dataset in the following structure:
 
 ```
 synthea-mimic/
 └── csv/
-├── patients.csv
+├── allergies.csv
+├── careplans.csv
+├── claims.csv
+├── claims_transactions.csv
+├── conditions.csv
+├── devices.csv
+├── encounters.csv
+├── imaging_studies.csv
+├── immunizations.csv
+├── medications.csv
 ├── observations.csv
-└── conditions.csv
+├── organizations.csv
+├── patients.csv
+├── payer_transitions.csv
+├── procedures.csv
+├── providers.csv
+└── supplies.csv
 ```
+
+The application expects this exact directory structure.
 
 ---
 
 ## Feature Engineering
 
-The pipeline performs extensive preprocessing and feature construction, including:
+The pipeline transforms raw healthcare records into patient-level machine learning features through:
 
-* Patient-level aggregation of clinical observations
+* Demographic feature extraction
+* Observation aggregation
+* Clinical measurement statistics
+* Encounter history analysis
+* Condition labeling
 * Missing value handling
-* Temporal filtering
-* Condition frequency analysis
-* Target label generation
-* Numerical feature extraction
+* One-hot encoding of categorical attributes
 
-The resulting dataset is used for both binary and multilabel prediction tasks.
+---
+
+## Prediction Tasks
+
+The dashboard supports two prediction settings:
+
+### Multilabel Prediction
+
+Predicts the presence of the most common clinical conditions using independent binary labels.
+
+### Binary Prediction
+
+Predicts whether a patient has any of the target clinical conditions.
 
 ---
 
@@ -78,19 +89,19 @@ The resulting dataset is used for both binary and multilabel prediction tasks.
 
 ### Decision Tree
 
-Interpretable tree-based classifier used as a baseline model.
+Interpretable tree-based classifier with configurable depth and split constraints.
 
 ### Support Vector Machine (SVM)
 
-Kernel-based classifier for capturing non-linear decision boundaries.
+Kernel-based classifier supporting linear, polynomial, and RBF kernels.
 
 ### Multi-Layer Perceptron (MLP)
 
-Neural network model for learning complex feature interactions.
+Feed-forward neural network with configurable architecture and training parameters.
 
 ---
 
-## Evaluation Framework
+## Evaluation Metrics
 
 Models are evaluated using:
 
@@ -98,80 +109,69 @@ Models are evaluated using:
 * Precision
 * Recall
 * F1 Score
-* ROC Analysis
+* ROC Curves
 * Confusion Matrices
-
-Performance is compared across both historical and current patient cohorts.
+* Classification Reports
 
 ---
 
 ## Temporal Shift Analysis
 
-A key objective of this project is understanding temporal drift.
+A key objective of this project is understanding how model performance changes over time.
 
 The dataset is divided into:
 
-* Dataset 1 (Historical Cohort)
-* Dataset 2 (Current Cohort)
+* Historical Dataset (Dataset 1)
+* Current Dataset (Dataset 2)
 
-Models trained on historical data are evaluated on newer data to measure robustness under distributional change.
-
-This enables analysis of:
-
-* Generalization performance
-* Dataset drift
-* Model degradation over time
+Models trained on historical data are evaluated on newer patient populations to measure robustness under temporal distribution shift.
 
 ---
 
 ## Continual Learning
 
-The project investigates whether retraining models on newer patient records improves performance.
+The project studies whether retraining models on newer patient data improves predictive performance.
 
-Experiments compare:
+This allows comparison between:
 
 * Original model performance
-* Performance after exposure to Dataset 2
+* Post-update model performance
 * Adaptation effectiveness under temporal drift
 
 ---
 
 ## Dashboard Features
 
-The Streamlit dashboard provides:
-
-### Data Exploration
+### Dataset Exploration
 
 * Dataset statistics
-* Class distributions
-* Clinical feature summaries
+* Feature distributions
+* Class balance analysis
 
 ### Model Training
 
-* Model selection
-* Hyperparameter controls
+* Hyperparameter tuning
 * Interactive experimentation
 
 ### Model Evaluation
 
 * Classification metrics
-* ROC curves
+* ROC analysis
 * Confusion matrices
 
-### Feature Interpretation
+### Model Interpretation
 
-* Feature importance rankings
-* Model explainability views
+* Feature importance analysis
+* Decision Tree visualization
 
 ### Temporal Analysis
 
 * Historical vs current cohort comparison
-* Temporal drift visualization
+* Distribution shift evaluation
 
-### Continual Learning Analysis
+### Continual Learning
 
 * Before and after retraining comparisons
-* Performance tracking across datasets
 
 ---
 
@@ -181,11 +181,7 @@ The Streamlit dashboard provides:
 .
 ├── clinical_ml_dashboard.py
 ├── requirements.txt
-├── README.md
-├── assets/
-│   └── screenshots/
-└── synthea-mimic/
-└── csv/
+└── README.md
 ```
 
 ---
@@ -224,27 +220,15 @@ The dashboard will open locally in your browser.
 
 ---
 
-## Key Learning Outcomes
-
-* Healthcare machine learning workflows
-* Feature engineering on structured EHR data
-* Model evaluation under temporal shift
-* Continual learning techniques
-* Interactive ML dashboard development
-* Model interpretation and explainability
-
----
-
 ## Future Improvements
 
 Potential extensions include:
 
 * Advanced continual learning methods
 * Ensemble learning approaches
-* SHAP-based model explanations
-* Calibration analysis
-* Real-world healthcare datasets
+* Explainable AI techniques
 * Automated hyperparameter optimization
+* Real-world healthcare datasets
 
 ---
 
@@ -252,4 +236,4 @@ Potential extensions include:
 
 Aniket Shukla
 
-Computer Science, BITS Pilani Hyderabad
+BITS Pilani, Hyderabad Campus
